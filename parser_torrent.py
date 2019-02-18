@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Author:Chengli
 
 '''
 为了匹配ut传过来的消息，根据torrent信息返回种子内容下载的：
@@ -21,8 +20,10 @@ def get_info_from_torrent(file):
         file_path = ''
         files = info['files']
         for file in files:
-            if file['length'] > biggest and (file['path'][0].endswith('mp4'or 'mkv'or 'avi'or 'ts' or 'mov')):
-                file_path = file['path'][0]
+            if file['length'] > biggest 
+                if file['path'][-1].endswith(('mp4','mkv','avi','ts','mov')):
+                    biggest = file['length']
+                    file_path = '\\'.join(file['path'])
         file_path = file_dir+'\\'+file_path
         return file_dir, file_path
     else:
@@ -31,7 +32,7 @@ def get_info_from_torrent(file):
 
 if __name__ == "__main__":
 
-    # file_ = r'C:\Users\CL\Desktop\种子\[TTG] Game.of.Thrones.S01.Pack.HDTV.720p.x264.AAC-PHD.torrent'
+    # file_ = r'C:\test.torrent'
     file_ = input('请输入一个种子的绝对路径')
     print(get_info_from_torrent(file_))
 

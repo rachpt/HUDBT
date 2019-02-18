@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Author:Chengli
 
 from bs4 import BeautifulSoup
 from html2bbcode.parser import HTML2BBCode
@@ -28,19 +27,27 @@ def parser_html(html, torrent_path):
     raw_info['info'] = to_bbcode(str(soup.select('td .rowfollow')[4]))
 
     # 简介
+    flag = 0 
     descr = str(soup.find('div', id='kdescr'))
     ad = str(soup.find('div', id='ad_torrentdetail'))
     descr = descr.replace(ad, '')
     descr = to_bbcode(descr)
     try:
-        link = re.search('◎豆瓣链接.*douban.com/subject/(\d{8})', descr)
+        link = re.search('.*douban.com/subject/(\d{7,8})', descr)
         link = ('https://movie.douban.com/subject/'+link.group(1)+'/')
         descr = get_descr.get_full_descr(link, torrent_path)
-        raw_info['douban'] = 1
+        flag == 1
     except Exception as exc:
-        print('该种子简介没有豆瓣链接： %s' % exc)
-        descr = format_descr(descr)
-        raw_info['douban'] = 0
+        pass
+    if flag == 0:
+        try:
+            link_1 = re.search('.*imdb.com/title/(tt\d{7,8})', descr)
+            link_1 = 'https://www.imdb.com/title/'+link_1.group(1)+'/'
+            descr = get_descr.get_full_descr(link_1, torrent_path)
+        except Exception:
+            print('该种子简介没有豆瓣或imdb链接.')
+            descr = format_descr(descr)
+
 
     raw_info['descr'] = extend_descr(descr, raw_info['site'])
     # print(raw_info['descr'])
